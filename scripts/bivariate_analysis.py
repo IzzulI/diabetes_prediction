@@ -53,7 +53,7 @@ def distribution_age_analysis(df: pd.DataFrame) -> None:
             ax2.annotate(f'{height:.1f}%', (x + width / 2., y + height / 2.), ha='center', va='center', color='black')
 
     plt.tight_layout()
-    plt.savefig('Distribution of Readmission Based on Age.png')
+    plt.savefig('eda/Distribution of Readmission Based on Age.png')
 
 def insulin_readmission_analysis(df: pd.DataFrame) -> None:
     """
@@ -93,7 +93,7 @@ def insulin_readmission_analysis(df: pd.DataFrame) -> None:
             ax2.annotate(f'{height:.1f}%', (x + width / 2., y + height / 2.), ha='center', va='center', color='black')
 
     plt.tight_layout()
-    plt.savefig('insulin_readmission_analysis.png')
+    plt.savefig('eda/insulin_readmission_analysis.png')
 
 def bivariate_analysis(df: pd.DataFrame) -> None:
     """

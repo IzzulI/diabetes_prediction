@@ -37,7 +37,7 @@ def countplot(df: pd.DataFrame) -> None:
   for ax in axes[num_cols:]:
         fig.delaxes(ax)
 
-  plt.savefig('Countplot_feature.png')
+  plt.savefig('eda/Countplot_feature.png')
 
 def boxplot(df: pd.DataFrame) -> None:
   """
@@ -57,7 +57,7 @@ def boxplot(df: pd.DataFrame) -> None:
   for ax in axes[num_cols:]:
         fig.delaxes(ax)
 
-  plt.savefig('Boxplot_feature.png')
+  plt.savefig('eda/Boxplot_feature.png')
 
 def univariate_analysis(df: pd.DataFrame) -> None:
     """

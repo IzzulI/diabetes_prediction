@@ -36,13 +36,9 @@ def main():
     # Store EDA start time
     start_eda=time()
 
-    # # Univariate Analysis
+    # Univariate Analysis, Heatmap, Bivariate Analysis (Cn be run in parallel)
     univariate_analysis(df)
-
-    # # Heatmap
     heatmap(df)
-
-    # # Bivariate Analysis
     bivariate_analysis(df)
 
     # Feature Selection

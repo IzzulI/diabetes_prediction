@@ -27,7 +27,7 @@ def heatmap(df: pd.DataFrame) -> None:
   plt.xticks(rotation=90)
 
   # Save and display the heatmap
-  plt.savefig('heatmap.png')
+  plt.savefig('eda/heatmap.png')
 
 def feature_selection(df: pd.DataFrame, target_column='readmission_in_30days') -> pd.DataFrame:
   """
