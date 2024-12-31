@@ -21,3 +21,5 @@ lightgbm_bayesian_param_space = {
 }
 
 lightgbm_bayes = bayesian_optimization_tuning(lightgbm_pipeline, lightgbm_bayesian_param_space, X_train, y_train)
+
+print(lightgbm_bayes)

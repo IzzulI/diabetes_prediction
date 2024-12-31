@@ -5,7 +5,7 @@ from lightgbm import LGBMClassifier
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split, StratifiedKFold, RandomizedSearchCV, GridSearchCV
-from sklearn.metrics import auc, make_scorer
+from sklearn.metrics import auc, make_scorer, precision_recall_curve
 
 # Set the seed for reproducibility
 seed = 123
@@ -18,7 +18,7 @@ def auc_pr_scorer(y_true, y_proba):
     precision, recall, _ = precision_recall_curve(y_true, y_proba)
     return auc(recall, precision)
 
-scorer = make_scorer(auc_pr_scorer, needs_proba=True)
+scorer = make_scorer(auc_pr_scorer)
 
 # Define hyperparameter tuning methods
 # Random Search Tuning

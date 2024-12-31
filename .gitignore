@@ -4,3 +4,24 @@
 *.suo
 *.userosscache
 *.sln.docstates
+
+# Ignore virtual environment
+venv/
+env/
+.env/
+
+# Ignore dependency manager files (unless required for the project)
+Pipfile.lock
+poetry.lock
+
+# Ignore IDE/editor files (optional)
+.idea/
+.vscode/
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore logs and temporary files
+*.log
+*.tmp
