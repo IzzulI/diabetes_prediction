@@ -1,5 +1,6 @@
-from tuning_functions import lightgbm_pipeline, bayesian_optimization_tuning
+from model_tuning_functions import lightgbm_pipeline, bayesian_optimization_tuning
 import pandas as pd
+from skopt.space import Integer, Real, Categorical
 
 # Load datasets
 X_train = pd.read_csv('data/X_train.csv')

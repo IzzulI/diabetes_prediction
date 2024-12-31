@@ -4,14 +4,21 @@ from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import Pipeline
-
 from sklearn.model_selection import train_test_split, StratifiedKFold, RandomizedSearchCV, GridSearchCV
+from sklearn.metrics import auc, make_scorer
 
 # Set the seed for reproducibility
 seed = 123
 
 # Define stratified k-fold cross-validation
 skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
+
+# Custom scorer for AUC-PR
+def auc_pr_scorer(y_true, y_proba):
+    precision, recall, _ = precision_recall_curve(y_true, y_proba)
+    return auc(recall, precision)
+
+scorer = make_scorer(auc_pr_scorer, needs_proba=True)
 
 # Define hyperparameter tuning methods
 # Random Search Tuning

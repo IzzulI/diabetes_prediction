@@ -1,6 +1,9 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
+# Set the seed for reproducibility
+seed = 123
+
 # Load preprocessed data into dataset
 df_ready2 = pd.read_csv('data/transformed_diabetic_data.csv')
 
