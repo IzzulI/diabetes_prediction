@@ -46,7 +46,7 @@ def bayesian_optimization_tuning(model, search_spaces, X_train, y_train):
 
 
 # Initialize models
-catboost_model = CatBoostClassifier(verbose=0, random_seed=seed)
+catboost_model = CatBoostClassifier(random_seed=seed, allow_writing_files=False)
 xgboost_model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=seed)
 lightgbm_model = LGBMClassifier(random_state=seed)
 

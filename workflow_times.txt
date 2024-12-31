@@ -1,0 +1,9 @@
+Start preprocessing: 2025-01-01 00:49:58
+Start EDA: 2025-01-01 00:50:01
+Start modeling: 2025-01-01 00:50:28
+End workflow: 2025-01-01 02:02:27
+
+Preprocessing took: 3.08 seconds
+EDA took: 27.05 seconds
+Modeling took: 4318.96 seconds
+Total workflow time: 4349.08 seconds
