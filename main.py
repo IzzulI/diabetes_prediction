@@ -1,5 +1,7 @@
+import os
 from datetime import datetime
 from time import time
+from multiprocessing import Pool
 from scripts.data_loading import load_data
 from scripts.data_cleaning import clean_data
 from scripts.data_transformation import transform_data
@@ -18,9 +20,24 @@ from scripts.xgboost_grid import get_xgboost_grid
 from scripts.xgboost_random import get_xgboost_random
 from scripts.evaluation import get_evaluation
 
+
+def run_parallel(func_list, args_list):
+    """Run multiple functions in parallel using multiprocessing."""
+    with Pool(processes=len(func_list)) as pool:
+        pool.starmap(run_task, zip(func_list, args_list))
+
+
+def run_task(func, args):
+    """Wrapper to run a single task with error handling."""
+    try:
+        func(*args)
+    except Exception as e:
+        print(f"Error in {func.__name__}: {e}")
+
+
 def main():
-    # Store prepocessing start time
-    start_preprocessing=time()
+    # Store preprocessing start time
+    start_preprocessing = time()
 
     # Load Data
     df = load_data("data/diabetic_data.csv")
@@ -31,42 +48,55 @@ def main():
     # Transform Data
     df = transform_data(df)
 
-    df.to_csv("data/transformed_diabetic_data.csv", index=False)
+    # Save transformed data
+    transformed_data_path = "data/transformed_diabetic_data.csv"
+    df.to_csv(transformed_data_path, index=False)
 
     # Store EDA start time
-    start_eda=time()
+    start_eda = time()
 
-    # Univariate Analysis, Heatmap, Bivariate Analysis (Cn be run in parallel)
-    univariate_analysis(df)
-    heatmap(df)
-    bivariate_analysis(df)
+    # Univariate Analysis, Heatmap, Bivariate Analysis (Parallel Execution)
+    run_parallel(
+        [univariate_analysis, heatmap, bivariate_analysis],
+        [(df,), (df,), (df,)]
+    )
 
     # Feature Selection
     df = feature_selection(df)
 
-    df.to_csv("data/selected_diabetic_data.csv", index=False)    
+    # Save selected features data
+    selected_data_path = "data/selected_diabetic_data.csv"
+    df.to_csv(selected_data_path, index=False)
 
-    #Store modeling starting time
+    # Store modeling starting time
     start_modeling = time()
 
     # Split Data
-    split(data_path='data/selected_diabetic_data.csv', label_column='readmission_in_30days', output_dir='data/', seed=123)
+    split(data_path=selected_data_path, label_column='readmission_in_30days', output_dir='data/', seed=123)
 
-    # Modeling with Hyperparameter Tuning (Can be run in parallel)
-    get_catboost_bayesian('data/X_train.csv', 'data/y_train.csv', 'models/catboost_bayes.pkl')
-    get_catboost_grid('data/X_train.csv', 'data/y_train.csv', 'models/catboost_grid.pkl')
-    get_catboost_random('data/X_train.csv', 'data/y_train.csv', 'models/catboost_random.pkl')
-    get_lightgbm_bayesian('data/X_train.csv', 'data/y_train.csv', 'models/lightgbm_bayes.pkl')
-    get_lightgbm_grid('data/X_train.csv', 'data/y_train.csv', 'models/lightgbm_grid.pkl')
-    get_lightgbm_random('data/X_train.csv', 'data/y_train.csv', 'models/lightgbm_random.pkl')
-    get_xgboost_bayesian('data/X_train.csv', 'data/y_train.csv', 'models/xgboost_bayes.pkl')
-    get_xgboost_grid('data/X_train.csv', 'data/y_train.csv', 'models/xgboost_grid.pkl')
-    get_xgboost_random('data/X_train.csv', 'data/y_train.csv', 'models/xgboost_random.pkl')
-    
+    # Modeling with Hyperparameter Tuning (Parallel Execution)
+    modeling_tasks = [
+        get_catboost_bayesian, get_catboost_grid, get_catboost_random,
+        get_lightgbm_bayesian, get_lightgbm_grid, get_lightgbm_random,
+        get_xgboost_bayesian, get_xgboost_grid, get_xgboost_random,
+    ]
+    modeling_args = [
+        ('data/X_train.csv', 'data/y_train.csv', 'models/catboost_bayes.pkl'),
+        ('data/X_train.csv', 'data/y_train.csv', 'models/catboost_grid.pkl'),
+        ('data/X_train.csv', 'data/y_train.csv', 'models/catboost_random.pkl'),
+        ('data/X_train.csv', 'data/y_train.csv', 'models/lightgbm_bayes.pkl'),
+        ('data/X_train.csv', 'data/y_train.csv', 'models/lightgbm_grid.pkl'),
+        ('data/X_train.csv', 'data/y_train.csv', 'models/lightgbm_random.pkl'),
+        ('data/X_train.csv', 'data/y_train.csv', 'models/xgboost_bayes.pkl'),
+        ('data/X_train.csv', 'data/y_train.csv', 'models/xgboost_grid.pkl'),
+        ('data/X_train.csv', 'data/y_train.csv', 'models/xgboost_random.pkl'),
+    ]
+    run_parallel(modeling_tasks, modeling_args)
+
     # Evaluate
     get_evaluation(X_test_path='data/X_test.csv', y_test_path='data/y_test.csv', output_path='data/test_results.csv')
-    
-    #Store completion time
+
+    # Store completion time
     end_workflow = time()
 
     # Prepare the output text
@@ -87,6 +117,7 @@ def main():
         f.write(output_text)
 
     print("Workflow times have been saved to 'workflow_times.txt'")
+
 
 if __name__ == "__main__":
     main()
